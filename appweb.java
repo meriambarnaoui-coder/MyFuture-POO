@@ -6,49 +6,85 @@ public class appweb {
 
         Scanner scanner = new Scanner(System.in);
 
-        int cin;
-        String nom;
-        String prenom;
-        int nCompte;
-        final double plafond_retrait = 500.00;
+        System.out.println("entrez le CIN :");
+        String cin = scanner.nextLine();
 
-        System.out.println("Veuillez saisir le CIN :");
-        cin = scanner.nextInt();
-        System.out.println(cin);
+        System.out.println("entrez le nom :");
+        String nom = scanner.nextLine();
 
-        scanner.nextLine();
+        System.out.println("entrez le prenom :");
+        String prenom = scanner.nextLine();
 
-        System.out.println("Veuillez saisir le nom :");
-        nom = scanner.nextLine();
-        System.out.println(nom);
+        System.out.println("entrez le telephone :");
+        String telephone = scanner.nextLine();
 
-        System.out.println("Veuillez saisir le prenom :");
-        prenom = scanner.nextLine();
-        System.out.println(prenom);
+        Client client = new Client(cin, nom, prenom, telephone);
 
-        System.out.println("Veuillez saisir le numero de compte :");
-        nCompte = scanner.nextInt();
-        System.out.println(nCompte);
+        System.out.println("entrez le numero de compte :");
+        String nCompte = scanner.nextLine();
+
+        System.out.println("entrez le solde initial (tnd)");
+        double solde = scanner.nextDouble();
+
+        final double PLAFOND_RETRAIT = 500.00;
 
         int choix;
 
         do {
-
-            System.out.println("1. Consulter compte");
+            System.out.println("\n--- Menu banksmart ---");
+            System.out.println("1. Consulter le compte");
+            System.out.println("2. Effectuer un dépôt");
+            System.out.println("3. Effectuer un retrait");
+            System.out.println("4. Quitter");
+            System.out.println("Votre choix (1-4) :");
 
             choix = scanner.nextInt();
 
             switch (choix) {
 
                 case 1:
-                    System.out.println("Nom : " + nom);
-                    System.out.println("Prenom : " + prenom);
-                    System.out.println("CIN : " + cin);
-                    System.out.println("N° compte : " + nCompte);
+                    client.afficherClient();
+                    System.out.println("N° de compte : " + nCompte);
+                    System.out.println("Solde actuel : " + solde + " TND");
+                    System.out.println("Plafond max : " + PLAFOND_RETRAIT + " TND");
                     break;
+
+                case 2:
+                    System.out.println("Montant du dépôt (tnd) :");
+                    double depot = scanner.nextDouble();
+                    if (depot <= 0) {
+                        System.out.println("Montant invalide !");
+                    } else {
+                        solde += depot;
+                        System.out.println("Dépôt effectué. Nouveau solde : " + solde + " TND");
+                    }
+                    break;
+
+                case 3:
+                    System.out.println("Montant du retrait (tnd) :");
+                    double retrait = scanner.nextDouble();
+                    if (retrait <= 0) {
+                        System.out.println("Montant invalide !");
+                    } else if (retrait > PLAFOND_RETRAIT) {
+                        System.out.println("Retrait refusé : plafond de " + PLAFOND_RETRAIT + " TND dépassé.");
+                    } else if (retrait > solde) {
+                        System.out.println("Retrait refusé : solde insuffisant.");
+                    } else {
+                        solde -= retrait;
+                        System.out.println("Retrait effectué. Nouveau solde : " + solde + " TND");
+                    }
+                    break;
+
+                case 4:
+                    System.out.println("Au revoir !");
+                    break;
+
+                default:
+                    System.out.println("Choix invalide !");
+
             }
 
-        } while (choix != 1);
+        } while (choix != 4);
 
         scanner.close();
     }
